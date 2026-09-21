@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archivo Hextech - Ericka</title>
+    <!-- Fuentes estilo Arcane (Piltover Elegance & Hextech Tech) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Jura:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --piltover-gold: #C89B3C;
+            --piltover-dark-gold: #785A28;
+            --hextech-blue: #00F0FF;
+            --hextech-glow: rgba(0, 240, 255, 0.6);
+            --zaun-dark: #091016;
+            --bg-gradient: radial-gradient(circle at center, #122230 0%, #05090C 100%);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: var(--bg-gradient);
+            font-family: 'Jura', sans-serif;
+            overflow: hidden;
+            color: #E0E6ED;
+        }
+
+        /* Partículas de polvo de cristal Hextech */
+        .hex-dust {
+            position: absolute;
+            background-color: var(--hextech-blue);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--hextech-blue);
+            animation: float 6s infinite ease-in-out alternate;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); opacity: 0.2; }
+            100% { transform: translateY(-30px) scale(1.5); opacity: 0.6; }
+        }
+
+        .player-container {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            margin-bottom: 50px;
+            z-index: 10;
+        }
+
+        /* Vinilo transformado en Engranaje Hextech */
+        .vinyl {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
+            border-radius: 50%;
+            border: 6px solid #2a2a2a;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8), inset 0 0 30px rgba(0, 240, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* Anillos mecánicos internos */
+        .vinyl::before {
+            content: '';
+            position: absolute;
+            width: 270px;
+            height: 270px;
+            border-radius: 50%;
+            border: 2px dashed var(--piltover-dark-gold);
+            opacity: 0.5;
+        }
+
+        /* Centro del artefacto (Foto 2) */
+        .vinyl-center {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-image: url('assets/foto2.jpeg');
+            background-size: cover;
+            background-position: center;
+            border: 3px solid var(--piltover-gold);
+            box-shadow: 0 0 15px var(--hextech-glow);
+            z-index: 2;
+            position: relative;
+        }
+
+        /* Núcleo Hextech brillante en el centro */
+        .vinyl-center::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 15px;
+            height: 15px;
+            background-color: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 15px 5px var(--hextech-blue);
+        }
+
+        /* Portada estilo Marco de Piltover (Foto 1) */
+        .cover {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 320px;
+            height: 320px;
+            background-image: url('assets/foto1.png');
+            background-size: cover;
+            background-position: center;
+            background-color: #111;
+            /* Diseño Art Deco con doble borde dorado */
+            border: 2px solid var(--piltover-gold);
+            outline: 1px solid var(--piltover-dark-gold);
+            outline-offset: -8px;
+            box-shadow: 10px 10px 30px rgba(0,0,0,0.7);
+            z-index: 5;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Esquinas metálicas estilo Art Deco */
+        .cover::before, .cover::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--piltover-gold);
+            z-index: 6;
+        }
+        .cover::before { top: 0; left: 0; border-right: none; border-bottom: none; }
+        .cover::after { bottom: 0; right: 0; border-left: none; border-top: none; }
+
+        /* Animaciones cinemáticas */
+        .playing .cover {
+            transform: translateX(-170px) scale(0.95);
+        }
+
+        .playing .vinyl {
+            transform: translateX(150px);
+            animation: spin 3s linear infinite, pulseGlow 2s infinite alternate;
+        }
+
+        @keyframes spin {
+            100% { transform: translateX(150px) rotate(360deg); }
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 20px rgba(0,0,0,0.8), inset 0 0 10px var(--hextech-blue); }
+            100% { box-shadow: 0 0 20px rgba(0,0,0,0.8), inset 0 0 40px var(--hextech-blue); }
+        }
+
+        /* Controles - Botón Mecánico */
+        .controls {
+            z-index: 10;
+            margin-top: 20px;
+        }
+
+        button {
+            background: linear-gradient(to bottom, #D4A74A, #8F6A28);
+            color: #05090C;
+            border: 2px solid #F3C969;
+            padding: 12px 35px;
+            font-family: 'Cinzel', serif;
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover {
+            background: linear-gradient(to bottom, #F3C969, #A87D32);
+            box-shadow: 0 0 15px var(--piltover-gold);
+            transform: translateY(-2px);
+        }
+
+        /* Mensaje Oculto */
+        .message {
+            margin-top: 30px;
+            text-align: center;
+            max-width: 450px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s ease;
+            z-index: 10;
+            background: rgba(9, 16, 22, 0.85);
+            padding: 25px;
+            border: 1px solid var(--piltover-dark-gold);
+            border-left: 3px solid var(--hextech-blue);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .playing ~ .message {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .message h2 {
+            margin: 0 0 15px 0;
+            color: var(--piltover-gold);
+            font-family: 'Cinzel', serif;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(200, 155, 60, 0.3);
+        }
+
+        .message p {
+            margin: 0;
+            line-height: 1.6;
+            font-size: 15px;
+            color: #A0B0C0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Polvo Hextech ambiental -->
+    <div class="hex-dust" style="width: 4px; height: 4px; top: 20%; left: 20%; animation-delay: 0s;"></div>
+    <div class="hex-dust" style="width: 3px; height: 3px; top: 60%; left: 15%; animation-delay: 1s;"></div>
+    <div class="hex-dust" style="width: 5px; height: 5px; top: 30%; right: 25%; animation-delay: 2s;"></div>
+    <div class="hex-dust" style="width: 3px; height: 3px; bottom: 25%; right: 15%; animation-delay: 0.5s;"></div>
+
+    <div class="player-container" id="player">
+        <!-- El Disco Mecánico -->
+        <div class="vinyl">
+            <div class="vinyl-center"></div>
+        </div>
+        <!-- La Funda Art Deco -->
+        <div class="cover"></div>
+    </div>
+
+    <audio id="audio" src="assets/cancion.mp3"></audio>
+
+    <div class="controls">
+        <button id="play-btn">Activar Archivo</button>
+    </div>
+
+    <div class="message">
+        <h2>Para Ericka</h2>
+        <p>Un pequeño recuerdo forjado con la misma energía que mueve las ciudades. Que la magia y la tecnología de este momento acompañen siempre tu camino.</p>
+    </div>
+
+    <script>
+        const playBtn = document.getElementById('play-btn');
+        const playerContainer = document.getElementById('player');
+        const audio = document.getElementById('audio');
+        let isPlaying = false;
+
+        playBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                audio.pause();
+                playerContainer.classList.remove('playing');
+                playBtn.innerText = 'Activar Archivo';
+            } else {
+                audio.play();
+                playerContainer.classList.add('playing');
+                playBtn.innerText = 'Pausar Archivo';
+            }
+            isPlaying = !isPlaying;
+        });
+
+        audio.addEventListener('ended', () => {
+            playerContainer.classList.remove('playing');
+            playBtn.innerText = 'Activar Archivo';
+            isPlaying = false;
+        });
+    </script>
+</body>
+</html>
